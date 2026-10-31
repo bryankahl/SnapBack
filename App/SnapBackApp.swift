@@ -11,7 +11,7 @@ import SwiftUI
 struct SnapBackApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CompositionRoot.makeRootView()
         }
     }
 }

@@ -6,8 +6,66 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B46C1F403091671000881B4A /* SnapBackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F3F3091671000881B4A /* SnapBackApp.swift */; };
+		B46C1F423091671000881B4A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F413091671000881B4A /* ContentView.swift */; };
+		B46C1F523091697C00881B4A /* ExportStructureReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F513091697C00881B4A /* ExportStructureReport.swift */; };
+		B46C1F543091699800881B4A /* ExportInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F533091699800881B4A /* ExportInspector.swift */; };
+		B46C1F56309169C700881B4A /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F55309169C700881B4A /* DocumentPicker.swift */; };
+		B46C1F5830916A0800881B4A /* CompositionRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F5730916A0800881B4A /* CompositionRoot.swift */; };
+		B46C1F5B3092AD1100881B4A /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = B46C1F5A3092AD1100881B4A /* ZIPFoundation */; };
+		B46C1F5D30954FF400881B4A /* MemoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F5C30954FF400881B4A /* MemoryRecord.swift */; };
+		B46C1F5F3095500D00881B4A /* ParsedMemoriesReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F5E3095500D00881B4A /* ParsedMemoriesReport.swift */; };
+		B46C1F613095502200881B4A /* MemoriesParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F603095502200881B4A /* MemoriesParser.swift */; };
+		B46C1F633095530200881B4A /* MatchProbeReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F623095530200881B4A /* MatchProbeReport.swift */; };
+		B46C1F653095531F00881B4A /* MatchProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F643095531F00881B4A /* MatchProbe.swift */; };
+		B46C1F6730955E0A00881B4A /* MemoryMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F6630955E0A00881B4A /* MemoryMatch.swift */; };
+		B46C1F6930955E2700881B4A /* MemoryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F6830955E2700881B4A /* MemoryMatcher.swift */; };
+		B46C1F6B30955E4300881B4A /* MultiDocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F6A30955E4300881B4A /* MultiDocumentPicker.swift */; };
+		B46C1F6D3095610500881B4A /* ShapeCensusReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F6C3095610500881B4A /* ShapeCensusReport.swift */; };
+		B46C1F6F3095611A00881B4A /* ShapeCensus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F6E3095611A00881B4A /* ShapeCensus.swift */; };
+		B46C1F713095630F00881B4A /* UuidProbeReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F703095630F00881B4A /* UuidProbeReport.swift */; };
+		B46C1F733095632300881B4A /* UuidProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F723095632300881B4A /* UuidProbe.swift */; };
+		B46C1F75309564C300881B4A /* LinkProbeReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F74309564C300881B4A /* LinkProbeReport.swift */; };
+		B46C1F77309564DA00881B4A /* LinkProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F76309564DA00881B4A /* LinkProbe.swift */; };
+		B46C1F793095677B00881B4A /* MemoryPairer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F783095677B00881B4A /* MemoryPairer.swift */; };
+		B46C1F7B3095679B00881B4A /* MemoryImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F7A3095679B00881B4A /* MemoryImporter.swift */; };
+		B46C1F7D3096630400881B4A /* ProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F7C3096630400881B4A /* ProductView.swift */; };
+		B46C1F7F30966C7500881B4A /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F7E30966C7500881B4A /* PaywallView.swift */; };
+		B46C1F8130966C9C00881B4A /* PaywallStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F8030966C9C00881B4A /* PaywallStore.swift */; };
+		B46C1F8530966E5200881B4A /* SnapBack.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B46C1F8430966E5200881B4A /* SnapBack.storekit */; };
+		B46C1F873096731400881B4A /* ImportCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F863096731400881B4A /* ImportCounter.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		B46C1F3C3091671000881B4A /* SnapBack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnapBack.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B46C1F3F3091671000881B4A /* SnapBackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapBackApp.swift; sourceTree = "<group>"; };
+		B46C1F413091671000881B4A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B46C1F513091697C00881B4A /* ExportStructureReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportStructureReport.swift; sourceTree = "<group>"; };
+		B46C1F533091699800881B4A /* ExportInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportInspector.swift; sourceTree = "<group>"; };
+		B46C1F55309169C700881B4A /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
+		B46C1F5730916A0800881B4A /* CompositionRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionRoot.swift; sourceTree = "<group>"; };
+		B46C1F5C30954FF400881B4A /* MemoryRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryRecord.swift; sourceTree = "<group>"; };
+		B46C1F5E3095500D00881B4A /* ParsedMemoriesReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsedMemoriesReport.swift; sourceTree = "<group>"; };
+		B46C1F603095502200881B4A /* MemoriesParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoriesParser.swift; sourceTree = "<group>"; };
+		B46C1F623095530200881B4A /* MatchProbeReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchProbeReport.swift; sourceTree = "<group>"; };
+		B46C1F643095531F00881B4A /* MatchProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchProbe.swift; sourceTree = "<group>"; };
+		B46C1F6630955E0A00881B4A /* MemoryMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryMatch.swift; sourceTree = "<group>"; };
+		B46C1F6830955E2700881B4A /* MemoryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryMatcher.swift; sourceTree = "<group>"; };
+		B46C1F6A30955E4300881B4A /* MultiDocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiDocumentPicker.swift; sourceTree = "<group>"; };
+		B46C1F6C3095610500881B4A /* ShapeCensusReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeCensusReport.swift; sourceTree = "<group>"; };
+		B46C1F6E3095611A00881B4A /* ShapeCensus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeCensus.swift; sourceTree = "<group>"; };
+		B46C1F703095630F00881B4A /* UuidProbeReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UuidProbeReport.swift; sourceTree = "<group>"; };
+		B46C1F723095632300881B4A /* UuidProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UuidProbe.swift; sourceTree = "<group>"; };
+		B46C1F74309564C300881B4A /* LinkProbeReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkProbeReport.swift; sourceTree = "<group>"; };
+		B46C1F76309564DA00881B4A /* LinkProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkProbe.swift; sourceTree = "<group>"; };
+		B46C1F783095677B00881B4A /* MemoryPairer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryPairer.swift; sourceTree = "<group>"; };
+		B46C1F7A3095679B00881B4A /* MemoryImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryImporter.swift; sourceTree = "<group>"; };
+		B46C1F7C3096630400881B4A /* ProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductView.swift; sourceTree = "<group>"; };
+		B46C1F7E30966C7500881B4A /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		B46C1F8030966C9C00881B4A /* PaywallStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallStore.swift; sourceTree = "<group>"; };
+		B46C1F8430966E5200881B4A /* SnapBack.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = SnapBack.storekit; sourceTree = "<group>"; };
+		B46C1F863096731400881B4A /* ImportCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCounter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B46C1F5B3092AD1100881B4A /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -32,7 +91,12 @@
 		B46C1F333091671000881B4A = {
 			isa = PBXGroup;
 			children = (
+				B46C1F4E3091679B00881B4A /* Infrastructure */,
+				B46C1F4D3091679600881B4A /* Domain */,
+				B46C1F4C3091679000881B4A /* Presentation */,
+				B46C1F4B3091678A00881B4A /* App */,
 				B46C1F3E3091671000881B4A /* SnapBack */,
+				B46C1F593092AD1100881B4A /* Frameworks */,
 				B46C1F3D3091671000881B4A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +107,68 @@
 				B46C1F3C3091671000881B4A /* SnapBack.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B46C1F4B3091678A00881B4A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B46C1F3F3091671000881B4A /* SnapBackApp.swift */,
+				B46C1F5730916A0800881B4A /* CompositionRoot.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		B46C1F4C3091679000881B4A /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				B46C1F413091671000881B4A /* ContentView.swift */,
+				B46C1F55309169C700881B4A /* DocumentPicker.swift */,
+				B46C1F6A30955E4300881B4A /* MultiDocumentPicker.swift */,
+				B46C1F8430966E5200881B4A /* SnapBack.storekit */,
+				B46C1F7C3096630400881B4A /* ProductView.swift */,
+				B46C1F7E30966C7500881B4A /* PaywallView.swift */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		B46C1F4D3091679600881B4A /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				B46C1F513091697C00881B4A /* ExportStructureReport.swift */,
+				B46C1F5C30954FF400881B4A /* MemoryRecord.swift */,
+				B46C1F5E3095500D00881B4A /* ParsedMemoriesReport.swift */,
+				B46C1F623095530200881B4A /* MatchProbeReport.swift */,
+				B46C1F6630955E0A00881B4A /* MemoryMatch.swift */,
+				B46C1F6C3095610500881B4A /* ShapeCensusReport.swift */,
+				B46C1F703095630F00881B4A /* UuidProbeReport.swift */,
+				B46C1F74309564C300881B4A /* LinkProbeReport.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		B46C1F4E3091679B00881B4A /* Infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				B46C1F533091699800881B4A /* ExportInspector.swift */,
+				B46C1F603095502200881B4A /* MemoriesParser.swift */,
+				B46C1F643095531F00881B4A /* MatchProbe.swift */,
+				B46C1F6830955E2700881B4A /* MemoryMatcher.swift */,
+				B46C1F6E3095611A00881B4A /* ShapeCensus.swift */,
+				B46C1F723095632300881B4A /* UuidProbe.swift */,
+				B46C1F76309564DA00881B4A /* LinkProbe.swift */,
+				B46C1F783095677B00881B4A /* MemoryPairer.swift */,
+				B46C1F7A3095679B00881B4A /* MemoryImporter.swift */,
+				B46C1F8030966C9C00881B4A /* PaywallStore.swift */,
+				B46C1F863096731400881B4A /* ImportCounter.swift */,
+			);
+			path = Infrastructure;
+			sourceTree = "<group>";
+		};
+		B46C1F593092AD1100881B4A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +191,7 @@
 			);
 			name = SnapBack;
 			packageProductDependencies = (
+				B46C1F5A3092AD1100881B4A /* ZIPFoundation */,
 			);
 			productName = SnapBack;
 			productReference = B46C1F3C3091671000881B4A /* SnapBack.app */;
@@ -94,6 +221,9 @@
 			);
 			mainGroup = B46C1F333091671000881B4A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B46C1F50309168AD00881B4A /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B46C1F3D3091671000881B4A /* Products */;
 			projectDirPath = "";
@@ -109,6 +239,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B46C1F8530966E5200881B4A /* SnapBack.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +250,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B46C1F8130966C9C00881B4A /* PaywallStore.swift in Sources */,
+				B46C1F6930955E2700881B4A /* MemoryMatcher.swift in Sources */,
+				B46C1F7F30966C7500881B4A /* PaywallView.swift in Sources */,
+				B46C1F423091671000881B4A /* ContentView.swift in Sources */,
+				B46C1F6D3095610500881B4A /* ShapeCensusReport.swift in Sources */,
+				B46C1F733095632300881B4A /* UuidProbe.swift in Sources */,
+				B46C1F713095630F00881B4A /* UuidProbeReport.swift in Sources */,
+				B46C1F873096731400881B4A /* ImportCounter.swift in Sources */,
+				B46C1F613095502200881B4A /* MemoriesParser.swift in Sources */,
+				B46C1F6730955E0A00881B4A /* MemoryMatch.swift in Sources */,
+				B46C1F5F3095500D00881B4A /* ParsedMemoriesReport.swift in Sources */,
+				B46C1F7B3095679B00881B4A /* MemoryImporter.swift in Sources */,
+				B46C1F543091699800881B4A /* ExportInspector.swift in Sources */,
+				B46C1F653095531F00881B4A /* MatchProbe.swift in Sources */,
+				B46C1F7D3096630400881B4A /* ProductView.swift in Sources */,
+				B46C1F75309564C300881B4A /* LinkProbeReport.swift in Sources */,
+				B46C1F793095677B00881B4A /* MemoryPairer.swift in Sources */,
+				B46C1F403091671000881B4A /* SnapBackApp.swift in Sources */,
+				B46C1F56309169C700881B4A /* DocumentPicker.swift in Sources */,
+				B46C1F633095530200881B4A /* MatchProbeReport.swift in Sources */,
+				B46C1F6B30955E4300881B4A /* MultiDocumentPicker.swift in Sources */,
+				B46C1F5D30954FF400881B4A /* MemoryRecord.swift in Sources */,
+				B46C1F77309564DA00881B4A /* LinkProbe.swift in Sources */,
+				B46C1F5830916A0800881B4A /* CompositionRoot.swift in Sources */,
+				B46C1F6F3095611A00881B4A /* ShapeCensus.swift in Sources */,
+				B46C1F523091697C00881B4A /* ExportStructureReport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +413,7 @@
 				DEVELOPMENT_TEAM = 3F89FA87D2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "SnapBack saves your memories to your photo library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -288,6 +446,7 @@
 				DEVELOPMENT_TEAM = 3F89FA87D2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "SnapBack saves your memories to your photo library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -332,6 +491,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B46C1F50309168AD00881B4A /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.20;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B46C1F5A3092AD1100881B4A /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B46C1F50309168AD00881B4A /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B46C1F343091671000881B4A /* Project object */;
 }
