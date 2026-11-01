@@ -12,6 +12,7 @@ struct ImportReport {
     let composited: Int
     let videoOverlaysSkipped: Int
     let skippedAlreadyImported: Int
+    let dedupSkipped: Int
 }
 
 protocol MemoryImporting {
@@ -21,13 +22,14 @@ protocol MemoryImporting {
 final class MemoryImporter: MemoryImporting {
     private let pairer: MemoryPairing
     private let skipKey = "importedFileKeys"
+    static let dedupThreshold = 5
 
     init(pairer: MemoryPairing) {
         self.pairer = pairer
     }
 
     func importMains(records: [MemoryRecord], zipURLs: [URL], limit: Int, progress: @escaping (Int, Int) -> Void) async throws -> ImportReport {
-        let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+        let status = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
         guard status == .authorized || status == .limited else {
             throw ImportError.photoAccessDenied
         }
@@ -58,10 +60,11 @@ final class MemoryImporter: MemoryImporting {
 
         let (dated, _) = pairer.pair(records: records, mains: mains)
         let batch = Array(dated.prefix(limit))
+        let dedupIndex = await LibraryScanner.buildIndex(for: batch.map(\.creationDate))
 
         var importedKeys = Set(UserDefaults.standard.stringArray(forKey: skipKey) ?? [])
         var imported = 0, exact = 0, day = 0, failed = 0
-        var composited = 0, videoOverlaysSkipped = 0, skipped = 0, attempted = 0
+        var composited = 0, videoOverlaysSkipped = 0, skipped = 0, attempted = 0, dedupSkipped = 0
         for (index, item) in batch.enumerated() {
             let key = Self.fileKey(item.file)
             if importedKeys.contains(key) {
@@ -72,16 +75,21 @@ final class MemoryImporter: MemoryImporting {
             attempted += 1
             do {
                 let overlay = overlaysByUuid[Self.uuid(of: item.file.path) ?? ""]
-                let didComposite = try await save(item, overlay: overlay)
-                if didComposite { composited += 1 }
-                if item.exact { exact += 1 } else { day += 1 }
-                if overlay != nil && Self.isVideo(item.file.path) { videoOverlaysSkipped += 1 }
-                imported += 1
-                importedKeys.insert(key)
-                UserDefaults.standard.set(Array(importedKeys), forKey: skipKey)
+                switch try await save(item, overlay: overlay, dedupIndex: dedupIndex) {
+                case .dedupSkipped:
+                    dedupSkipped += 1
+                case .saved(let didComposite):
+                    if didComposite { composited += 1 }
+                    if item.exact { exact += 1 } else { day += 1 }
+                    if overlay != nil && Self.isVideo(item.file.path) { videoOverlaysSkipped += 1 }
+                    imported += 1
+                    importedKeys.insert(key)
+                    UserDefaults.standard.set(Array(importedKeys), forKey: skipKey)
+                }
             } catch {
                 failed += 1
             }
+
             progress(index + 1, batch.count)
         }
         return ImportReport(
@@ -92,23 +100,52 @@ final class MemoryImporter: MemoryImporting {
             failed: failed,
             composited: composited,
             videoOverlaysSkipped: videoOverlaysSkipped,
-            skippedAlreadyImported: skipped
+            skippedAlreadyImported: skipped,
+            dedupSkipped: dedupSkipped
+
         )
     }
 
-    private func save(_ item: DatedMain, overlay: MatchedFile?) async throws -> Bool {
+    private enum SaveOutcome {
+        case saved(composited: Bool)
+        case dedupSkipped
+    }
+
+    private func save(_ item: DatedMain, overlay: MatchedFile?, dedupIndex: LibraryFingerprintIndex) async throws -> SaveOutcome {
         let mainURL = try extractToTmp(item.file)
         defer { try? FileManager.default.removeItem(at: mainURL) }
         let isVideo = Self.isVideo(item.file.path)
-        if !isVideo, let overlay = overlay {
-            if let composited = try? composite(mainURL: mainURL, overlayFile: overlay) {
-                try await saveImage(composited, creationDate: item.creationDate)
-                return true
-            }
+        if isVideo {
+            try await saveFile(at: mainURL, isVideo: true, creationDate: item.creationDate)
+            return .saved(composited: false)
         }
-        try await saveFile(at: mainURL, isVideo: isVideo, creationDate: item.creationDate)
-        return false
+        // Build the final image first: composited if an overlay applies,
+        // otherwise the raw main. Dedup must fingerprint what actually gets
+        // saved — fingerprinting the raw main never matches a library copy
+        // that has the overlay baked in.
+        var finalImage: UIImage?
+        var didComposite = false
+        if let overlay = overlay,
+           let composited = try? composite(mainURL: mainURL, overlayFile: overlay) {
+            finalImage = composited
+            didComposite = true
+        } else {
+            finalImage = UIImage(contentsOfFile: mainURL.path)
+        }
+        if let finalImage,
+           let hash = ImageFingerprinter.fingerprint(finalImage),
+           dedupIndex.hasCloseMatch(hash, threshold: Self.dedupThreshold) {
+            return .dedupSkipped
+        }
+        if didComposite, let finalImage {
+            try await saveImage(finalImage, creationDate: item.creationDate)
+            return .saved(composited: true)
+        }
+        try await saveFile(at: mainURL, isVideo: false, creationDate: item.creationDate)
+        return .saved(composited: false)
     }
+
+
 
     private func extractToTmp(_ file: MatchedFile) throws -> URL {
         let didStart = file.zipURL.startAccessingSecurityScopedResource()

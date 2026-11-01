@@ -131,7 +131,7 @@ struct ProductView: View {
                     await MainActor.run {
                         importing = false
                         progressText = ""
-                        paywallImportedSoFar = report.imported + report.skippedAlreadyImported
+                        paywallImportedSoFar = report.imported + report.skippedAlreadyImported + report.dedupSkipped
                         showingPaywall = true
                     }
                 }
@@ -185,12 +185,15 @@ struct ProductView: View {
         await MainActor.run {
             importing = false
             progressText = ""
-            let total = report.imported + report.skippedAlreadyImported
-            if report.failed > 0 {
-                doneText = "Done — \(total) memories in your Photos. \(report.failed) couldn't be saved — run it again to retry."
-            } else {
-                doneText = "Done — \(total) memories in your Photos."
+            let total = report.imported + report.skippedAlreadyImported + report.dedupSkipped
+            var text = "Done — \(total) memories in your Photos."
+            if report.dedupSkipped > 0 {
+                text += " Skipped \(report.dedupSkipped) already in your library."
             }
+            if report.failed > 0 {
+                text += " \(report.failed) couldn't be saved — run it again to retry."
+            }
+            doneText = text
         }
     }
 

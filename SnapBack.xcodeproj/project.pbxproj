@@ -35,6 +35,8 @@
 		B46C1F8130966C9C00881B4A /* PaywallStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F8030966C9C00881B4A /* PaywallStore.swift */; };
 		B46C1F8530966E5200881B4A /* SnapBack.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B46C1F8430966E5200881B4A /* SnapBack.storekit */; };
 		B46C1F873096731400881B4A /* ImportCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F863096731400881B4A /* ImportCounter.swift */; };
+		B46C1F8F3097575300881B4A /* ImageFingerprinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F8E3097575300881B4A /* ImageFingerprinter.swift */; };
+		B46C1F913097577900881B4A /* LibraryScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F903097577900881B4A /* LibraryScanner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +68,8 @@
 		B46C1F8030966C9C00881B4A /* PaywallStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallStore.swift; sourceTree = "<group>"; };
 		B46C1F8430966E5200881B4A /* SnapBack.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = SnapBack.storekit; sourceTree = "<group>"; };
 		B46C1F863096731400881B4A /* ImportCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCounter.swift; sourceTree = "<group>"; };
+		B46C1F8E3097575300881B4A /* ImageFingerprinter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFingerprinter.swift; sourceTree = "<group>"; };
+		B46C1F903097577900881B4A /* LibraryScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryScanner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -160,6 +164,8 @@
 				B46C1F7A3095679B00881B4A /* MemoryImporter.swift */,
 				B46C1F8030966C9C00881B4A /* PaywallStore.swift */,
 				B46C1F863096731400881B4A /* ImportCounter.swift */,
+				B46C1F8E3097575300881B4A /* ImageFingerprinter.swift */,
+				B46C1F903097577900881B4A /* LibraryScanner.swift */,
 			);
 			path = Infrastructure;
 			sourceTree = "<group>";
@@ -264,6 +270,7 @@
 				B46C1F7B3095679B00881B4A /* MemoryImporter.swift in Sources */,
 				B46C1F543091699800881B4A /* ExportInspector.swift in Sources */,
 				B46C1F653095531F00881B4A /* MatchProbe.swift in Sources */,
+				B46C1F913097577900881B4A /* LibraryScanner.swift in Sources */,
 				B46C1F7D3096630400881B4A /* ProductView.swift in Sources */,
 				B46C1F75309564C300881B4A /* LinkProbeReport.swift in Sources */,
 				B46C1F793095677B00881B4A /* MemoryPairer.swift in Sources */,
@@ -274,6 +281,7 @@
 				B46C1F5D30954FF400881B4A /* MemoryRecord.swift in Sources */,
 				B46C1F77309564DA00881B4A /* LinkProbe.swift in Sources */,
 				B46C1F5830916A0800881B4A /* CompositionRoot.swift in Sources */,
+				B46C1F8F3097575300881B4A /* ImageFingerprinter.swift in Sources */,
 				B46C1F6F3095611A00881B4A /* ShapeCensus.swift in Sources */,
 				B46C1F523091697C00881B4A /* ExportStructureReport.swift in Sources */,
 			);
@@ -414,6 +422,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "SnapBack saves your memories to your photo library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "SnapBack checks your library for photos you already saved, so it doesn't import duplicates.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -447,6 +456,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "SnapBack saves your memories to your photo library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "SnapBack checks your library for photos you already saved, so it doesn't import duplicates.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
