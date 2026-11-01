@@ -17,6 +17,31 @@ final class PaywallStore: ObservableObject {
     @Published private(set) var loading = false
     @Published private(set) var errorText: String?
 
+    /// Listens for transaction updates from launch. StoreKit requires this:
+    /// without it, confirmed purchases have nowhere to land, purchase()
+    /// silently reports failure, and every retry piles up another unfinished
+    /// transaction. The listener also recovers purchases from earlier runs:
+    /// unfinished transactions redeliver here on launch.
+    private var updatesTask: Task<Void, Never>?
+
+    init() {
+        updatesTask = Task.detached { [weak self] in
+            for await result in Transaction.updates {
+                guard let self else { break }
+                switch result {
+                case .verified(let transaction):
+                    let granted = transaction.productID == Self.productID && transaction.revocationDate == nil
+                    await transaction.finish()
+                    if granted {
+                        await MainActor.run { self.isPurchased = true }
+                    }
+                case .unverified:
+                    break
+                }
+            }
+        }
+    }
+
     func load() async {
         loading = true
         errorText = nil
@@ -34,22 +59,30 @@ final class PaywallStore: ObservableObject {
     }
 
     func purchase() async -> Bool {
-        guard let product else { return false }
+        guard let product else {
+            errorText = "Purchase option not found. Check the StoreKit configuration."
+            return false
+        }
         errorText = nil
         do {
             let result = try await product.purchase()
             switch result {
             case .success(let verification):
-                guard case .verified(let transaction) = verification else { return false }
+                guard case .verified(let transaction) = verification else {
+                    errorText = "Purchase couldn't be verified. Nothing was charged — try again."
+                    return false
+                }
                 await transaction.finish()
-                await refreshPurchased()
-                return isPurchased
+                isPurchased = true
+                return true
             case .userCancelled:
+                errorText = "Purchase cancelled. Nothing was charged."
                 return false
             case .pending:
                 errorText = "Purchase is pending approval. It will unlock once approved."
                 return false
             @unknown default:
+                errorText = "Purchase didn't complete. Nothing was charged — try again."
                 return false
             }
         } catch {
@@ -58,11 +91,14 @@ final class PaywallStore: ObservableObject {
         }
     }
 
-    func restore() async {
+    /// Returns true when a purchase is now on file, so the caller can unlock.
+    func restore() async -> Bool {
         await refreshPurchased()
-        if !isPurchased {
-            errorText = "No purchase found to restore."
+        if isPurchased {
+            return true
         }
+        errorText = "No purchase found to restore."
+        return false
     }
 
     func refreshPurchased() async {
@@ -73,6 +109,8 @@ final class PaywallStore: ObservableObject {
                 return
             }
         }
-        isPurchased = false
+        // Deliberately does not clear isPurchased: the updates listener may
+        // have granted from a transaction this read hasn't seen yet, and a
+        // missed read must never undo a verified grant.
     }
 }

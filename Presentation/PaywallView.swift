@@ -52,7 +52,9 @@ struct PaywallView: View {
                     .disabled(buying)
                 }
                 Button("Restore purchase") {
-                    Task { await store.restore() }
+                    Task {
+                        if await store.restore() { onUnlocked() }
+                    }
                 }
                 .font(.footnote)
                 .foregroundStyle(.secondary)

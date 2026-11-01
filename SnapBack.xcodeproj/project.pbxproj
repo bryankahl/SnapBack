@@ -37,6 +37,7 @@
 		B46C1F873096731400881B4A /* ImportCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F863096731400881B4A /* ImportCounter.swift */; };
 		B46C1F8F3097575300881B4A /* ImageFingerprinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F8E3097575300881B4A /* ImageFingerprinter.swift */; };
 		B46C1F913097577900881B4A /* LibraryScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F903097577900881B4A /* LibraryScanner.swift */; };
+		B46C1F933097955200881B4A /* VideoFrameExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C1F923097955200881B4A /* VideoFrameExtractor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		B46C1F863096731400881B4A /* ImportCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCounter.swift; sourceTree = "<group>"; };
 		B46C1F8E3097575300881B4A /* ImageFingerprinter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFingerprinter.swift; sourceTree = "<group>"; };
 		B46C1F903097577900881B4A /* LibraryScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryScanner.swift; sourceTree = "<group>"; };
+		B46C1F923097955200881B4A /* VideoFrameExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoFrameExtractor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -166,6 +168,7 @@
 				B46C1F863096731400881B4A /* ImportCounter.swift */,
 				B46C1F8E3097575300881B4A /* ImageFingerprinter.swift */,
 				B46C1F903097577900881B4A /* LibraryScanner.swift */,
+				B46C1F923097955200881B4A /* VideoFrameExtractor.swift */,
 			);
 			path = Infrastructure;
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 				B46C1F403091671000881B4A /* SnapBackApp.swift in Sources */,
 				B46C1F56309169C700881B4A /* DocumentPicker.swift in Sources */,
 				B46C1F633095530200881B4A /* MatchProbeReport.swift in Sources */,
+				B46C1F933097955200881B4A /* VideoFrameExtractor.swift in Sources */,
 				B46C1F6B30955E4300881B4A /* MultiDocumentPicker.swift in Sources */,
 				B46C1F5D30954FF400881B4A /* MemoryRecord.swift in Sources */,
 				B46C1F77309564DA00881B4A /* LinkProbe.swift in Sources */,

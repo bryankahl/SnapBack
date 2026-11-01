@@ -5,50 +5,75 @@
 //  Created by Bryan Kahl on 11/1/26.
 //
 
+import AVFoundation
 import Photos
 import UIKit
+import Vision
 
-/// The dedup index for one import run: fingerprints of existing Library
-/// PHOTOS near the import's dates. Photos only in v1 — videos import as today.
-/// An empty index means "don't skip anything" (no access, or nothing nearby),
-/// so dedup always fails open to importing.
+/// The dedup index for one import run: Vision feature prints of existing
+/// Library assets. An empty index means "don't skip anything" (no access, or
+/// nothing found), so dedup always fails open to importing.
 struct LibraryFingerprintIndex {
-    private let hashes: [UInt64]
+    private let prints: [VNFeaturePrintObservation]
 
-    init(hashes: [UInt64]) {
-        self.hashes = hashes
+    init(prints: [VNFeaturePrintObservation]) {
+        self.prints = prints
     }
 
-    static let empty = LibraryFingerprintIndex(hashes: [])
+    static let empty = LibraryFingerprintIndex(prints: [])
 
-    func hasCloseMatch(_ hash: UInt64, threshold: Int) -> Bool {
-        hashes.contains { ImageFingerprinter.distance($0, hash) <= threshold }
+    func hasCloseMatch(_ print: VNFeaturePrintObservation, threshold: Float) -> Bool {
+        prints.contains { other in
+            guard let d = ImageFingerprinter.distance(other, print) else { return false }
+            return d <= threshold
+        }
     }
 }
 
+/// Photo and video indexes kept SEPARATE on purpose: a photo and a video
+/// of the same moment look alike, but they are distinct memories. Mixing
+/// them would let a video get skipped because a photo of the same scene
+/// is already in the library (or vice versa).
+struct LibraryDedupIndex {
+    let photos: LibraryFingerprintIndex
+    let videos: LibraryFingerprintIndex
+}
+
 enum LibraryScanner {
-    /// Builds the index for the given memory dates. Metadata pre-filter first
-    /// (creation date within windowDays, photos only), thumbnails only for
-    /// candidates. Never blocks the UI: all Photos requests are async.
-    /// If read access isn't available, returns an empty index (import as today).
-    static func buildIndex(for dates: [Date], windowDays: Int = 1) async -> LibraryFingerprintIndex {
+    /// Builds the photo index over the WHOLE library (no date filter).
+    /// A date filter would miss manual saves made days later — the exact
+    /// case dedup must catch on a reinstall. If read access isn't available,
+    /// returns an empty index (import as today).
+    static func buildIndex() async -> LibraryFingerprintIndex {
         guard await ensureReadAccess() else { return .empty }
-        let window = TimeInterval(windowDays * 24 * 60 * 60)
         let assets = PHAsset.fetchAssets(with: .image, options: nil)
-        var candidates: [PHAsset] = []
-        assets.enumerateObjects { asset, _, _ in
-            guard let created = asset.creationDate else { return }
-            if dates.contains(where: { abs(created.timeIntervalSince($0)) <= window }) {
-                candidates.append(asset)
-            }
-        }
-        var hashes: [UInt64] = []
-        for asset in candidates {
+        var photoAssets: [PHAsset] = []
+        assets.enumerateObjects { asset, _, _ in photoAssets.append(asset) }
+        var prints: [VNFeaturePrintObservation] = []
+        for asset in photoAssets {
             guard let image = await thumbnail(for: asset),
-                  let hash = ImageFingerprinter.fingerprint(image) else { continue }
-            hashes.append(hash)
+                  let featurePrint = ImageFingerprinter.fingerprint(image) else { continue }
+            prints.append(featurePrint)
         }
-        return LibraryFingerprintIndex(hashes: hashes)
+        return LibraryFingerprintIndex(prints: prints)
+    }
+
+    /// Builds the video index over the WHOLE library (no date filter, same
+    /// reason as photos). One middle-frame feature print per video. If read
+    /// access isn't available, returns an empty index (import as today).
+    static func buildVideoIndex() async -> LibraryFingerprintIndex {
+        guard await ensureReadAccess() else { return .empty }
+        let assets = PHAsset.fetchAssets(with: .video, options: nil)
+        var videoAssets: [PHAsset] = []
+        assets.enumerateObjects { asset, _, _ in videoAssets.append(asset) }
+        var prints: [VNFeaturePrintObservation] = []
+        for asset in videoAssets {
+            guard let avAsset = await requestAVAsset(for: asset),
+                  let frame = await VideoFrameExtractor.middleFrame(of: avAsset),
+                  let featurePrint = ImageFingerprinter.fingerprint(frame) else { continue }
+            prints.append(featurePrint)
+        }
+        return LibraryFingerprintIndex(prints: prints)
     }
 
     private static func ensureReadAccess() async -> Bool {
@@ -85,6 +110,16 @@ enum LibraryScanner {
                 options: options
             ) { image, _ in
                 continuation.resume(returning: image)
+            }
+        }
+    }
+
+    private static func requestAVAsset(for asset: PHAsset) async -> AVAsset? {
+        await withCheckedContinuation { continuation in
+            let options = PHVideoRequestOptions()
+            options.isNetworkAccessAllowed = false
+            _ = PHImageManager.default().requestAVAsset(forVideo: asset, options: options) { avAsset, _, _ in
+                continuation.resume(returning: avAsset)
             }
         }
     }

@@ -22,7 +22,7 @@ protocol MemoryImporting {
 final class MemoryImporter: MemoryImporting {
     private let pairer: MemoryPairing
     private let skipKey = "importedFileKeys"
-    static let dedupThreshold = 5
+    static let dedupThreshold: Float = 0.3 // Starting point — calibrate after the run: loosen toward 0.5 if misses persist, tighten toward 0.15 if a memory goes missing (false skip).
 
     init(pairer: MemoryPairing) {
         self.pairer = pairer
@@ -60,7 +60,9 @@ final class MemoryImporter: MemoryImporting {
 
         let (dated, _) = pairer.pair(records: records, mains: mains)
         let batch = Array(dated.prefix(limit))
-        let dedupIndex = await LibraryScanner.buildIndex(for: batch.map(\.creationDate))
+        let photoIndex = await LibraryScanner.buildIndex()
+        let videoIndex = await LibraryScanner.buildVideoIndex()
+        let dedupIndex = LibraryDedupIndex(photos: photoIndex, videos: videoIndex)
 
         var importedKeys = Set(UserDefaults.standard.stringArray(forKey: skipKey) ?? [])
         var imported = 0, exact = 0, day = 0, failed = 0
@@ -111,14 +113,20 @@ final class MemoryImporter: MemoryImporting {
         case dedupSkipped
     }
 
-    private func save(_ item: DatedMain, overlay: MatchedFile?, dedupIndex: LibraryFingerprintIndex) async throws -> SaveOutcome {
+    private func save(_ item: DatedMain, overlay: MatchedFile?, dedupIndex: LibraryDedupIndex) async throws -> SaveOutcome {
         let mainURL = try extractToTmp(item.file)
         defer { try? FileManager.default.removeItem(at: mainURL) }
         let isVideo = Self.isVideo(item.file.path)
         if isVideo {
+            if let frame = await VideoFrameExtractor.middleFrame(of: mainURL),
+               let featurePrint = ImageFingerprinter.fingerprint(frame),
+               dedupIndex.videos.hasCloseMatch(featurePrint, threshold: Self.dedupThreshold) {
+                return .dedupSkipped
+            }
             try await saveFile(at: mainURL, isVideo: true, creationDate: item.creationDate)
             return .saved(composited: false)
         }
+
         // Build the final image first: composited if an overlay applies,
         // otherwise the raw main. Dedup must fingerprint what actually gets
         // saved — fingerprinting the raw main never matches a library copy
@@ -133,8 +141,8 @@ final class MemoryImporter: MemoryImporting {
             finalImage = UIImage(contentsOfFile: mainURL.path)
         }
         if let finalImage,
-           let hash = ImageFingerprinter.fingerprint(finalImage),
-           dedupIndex.hasCloseMatch(hash, threshold: Self.dedupThreshold) {
+           let featurePrint = ImageFingerprinter.fingerprint(finalImage),
+           dedupIndex.photos.hasCloseMatch(featurePrint, threshold: Self.dedupThreshold) {
             return .dedupSkipped
         }
         if didComposite, let finalImage {
