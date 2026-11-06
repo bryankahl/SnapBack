@@ -8,25 +8,21 @@
 import AVFoundation
 import Photos
 import UIKit
-import Vision
 
-/// The dedup index for one import run: Vision feature prints of existing
-/// Library assets. An empty index means "don't skip anything" (no access, or
+/// The dedup index for one import run: fingerprints of existing Library
+/// assets. An empty index means "don't skip anything" (no access, or
 /// nothing found), so dedup always fails open to importing.
 struct LibraryFingerprintIndex {
-    private let prints: [VNFeaturePrintObservation]
+    private let hashes: [UInt64]
 
-    init(prints: [VNFeaturePrintObservation]) {
-        self.prints = prints
+    init(hashes: [UInt64]) {
+        self.hashes = hashes
     }
 
-    static let empty = LibraryFingerprintIndex(prints: [])
+    static let empty = LibraryFingerprintIndex(hashes: [])
 
-    func hasCloseMatch(_ print: VNFeaturePrintObservation, threshold: Float) -> Bool {
-        prints.contains { other in
-            guard let d = ImageFingerprinter.distance(other, print) else { return false }
-            return d <= threshold
-        }
+    func hasCloseMatch(_ hash: UInt64, threshold: Int) -> Bool {
+        hashes.contains { ImageFingerprinter.distance($0, hash) <= threshold }
     }
 }
 
@@ -49,31 +45,31 @@ enum LibraryScanner {
         let assets = PHAsset.fetchAssets(with: .image, options: nil)
         var photoAssets: [PHAsset] = []
         assets.enumerateObjects { asset, _, _ in photoAssets.append(asset) }
-        var prints: [VNFeaturePrintObservation] = []
+        var hashes: [UInt64] = []
         for asset in photoAssets {
             guard let image = await thumbnail(for: asset),
-                  let featurePrint = ImageFingerprinter.fingerprint(image) else { continue }
-            prints.append(featurePrint)
+                  let hash = ImageFingerprinter.fingerprint(image) else { continue }
+            hashes.append(hash)
         }
-        return LibraryFingerprintIndex(prints: prints)
+        return LibraryFingerprintIndex(hashes: hashes)
     }
 
     /// Builds the video index over the WHOLE library (no date filter, same
-    /// reason as photos). One middle-frame feature print per video. If read
+    /// reason as photos). One middle-frame fingerprint per video. If read
     /// access isn't available, returns an empty index (import as today).
     static func buildVideoIndex() async -> LibraryFingerprintIndex {
         guard await ensureReadAccess() else { return .empty }
         let assets = PHAsset.fetchAssets(with: .video, options: nil)
         var videoAssets: [PHAsset] = []
         assets.enumerateObjects { asset, _, _ in videoAssets.append(asset) }
-        var prints: [VNFeaturePrintObservation] = []
+        var hashes: [UInt64] = []
         for asset in videoAssets {
             guard let avAsset = await requestAVAsset(for: asset),
                   let frame = await VideoFrameExtractor.middleFrame(of: avAsset),
-                  let featurePrint = ImageFingerprinter.fingerprint(frame) else { continue }
-            prints.append(featurePrint)
+                  let hash = ImageFingerprinter.fingerprint(frame) else { continue }
+            hashes.append(hash)
         }
-        return LibraryFingerprintIndex(prints: prints)
+        return LibraryFingerprintIndex(hashes: hashes)
     }
 
     private static func ensureReadAccess() async -> Bool {
@@ -100,12 +96,12 @@ enum LibraryScanner {
     private static func thumbnail(for asset: PHAsset) async -> UIImage? {
         await withCheckedContinuation { continuation in
             let options = PHImageRequestOptions()
-            options.deliveryMode = .fastFormat
+            options.deliveryMode = .highQualityFormat
             options.isNetworkAccessAllowed = false
             options.isSynchronous = false
             PHImageManager.default().requestImage(
                 for: asset,
-                targetSize: CGSize(width: 64, height: 64),
+                targetSize: CGSize(width: 256, height: 256),
                 contentMode: .aspectFill,
                 options: options
             ) { image, _ in

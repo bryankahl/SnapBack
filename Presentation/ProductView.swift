@@ -49,7 +49,11 @@ struct ProductView: View {
                 }
                 if importing {
                     VStack(spacing: 8) {
-                        ProgressView(value: Double(progressDone), total: Double(max(progressTotal, 1)))
+                        if progressTotal == 0 {
+                            ProgressView()
+                        } else {
+                            ProgressView(value: Double(progressDone), total: Double(max(progressTotal, 1)))
+                        }
                         Text(progressText)
                             .font(.footnote)
                             .foregroundStyle(.secondary)

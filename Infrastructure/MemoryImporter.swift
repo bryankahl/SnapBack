@@ -22,7 +22,7 @@ protocol MemoryImporting {
 final class MemoryImporter: MemoryImporting {
     private let pairer: MemoryPairing
     private let skipKey = "importedFileKeys"
-    static let dedupThreshold: Float = 0.3 // Starting point — calibrate after the run: loosen toward 0.5 if misses persist, tighten toward 0.15 if a memory goes missing (false skip).
+    static let dedupThreshold = 5
 
     init(pairer: MemoryPairing) {
         self.pairer = pairer
@@ -119,8 +119,8 @@ final class MemoryImporter: MemoryImporting {
         let isVideo = Self.isVideo(item.file.path)
         if isVideo {
             if let frame = await VideoFrameExtractor.middleFrame(of: mainURL),
-               let featurePrint = ImageFingerprinter.fingerprint(frame),
-               dedupIndex.videos.hasCloseMatch(featurePrint, threshold: Self.dedupThreshold) {
+               let hash = ImageFingerprinter.fingerprint(frame),
+               dedupIndex.videos.hasCloseMatch(hash, threshold: Self.dedupThreshold) {
                 return .dedupSkipped
             }
             try await saveFile(at: mainURL, isVideo: true, creationDate: item.creationDate)
@@ -141,8 +141,8 @@ final class MemoryImporter: MemoryImporting {
             finalImage = UIImage(contentsOfFile: mainURL.path)
         }
         if let finalImage,
-           let featurePrint = ImageFingerprinter.fingerprint(finalImage),
-           dedupIndex.photos.hasCloseMatch(featurePrint, threshold: Self.dedupThreshold) {
+           let hash = ImageFingerprinter.fingerprint(finalImage),
+           dedupIndex.photos.hasCloseMatch(hash, threshold: Self.dedupThreshold) {
             return .dedupSkipped
         }
         if didComposite, let finalImage {
@@ -152,6 +152,7 @@ final class MemoryImporter: MemoryImporting {
         try await saveFile(at: mainURL, isVideo: false, creationDate: item.creationDate)
         return .saved(composited: false)
     }
+
 
 
 
